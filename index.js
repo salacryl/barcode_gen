@@ -1,13 +1,10 @@
-/* global __dirname */
-/* global process */
-
 import express from "express";
 import  { createLogger, format, transports, } from "winston";
 import exphbs from "express-handlebars";
-import bodyParser from "body-parser";
 import methodOverride from "method-override";
 import browserSync  from "browser-sync";
 import path from "path";
+import generateHTMLTagBarcode from "./generateBarcode"
 
 // init logger
 const logger = createLogger({
@@ -31,8 +28,8 @@ app.engine("handlebars", exphbs({defaultLayout: "main",}));
 app.set("view engine", "handlebars");
 
 // body-parser
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true, }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true, }));
 
 // Method-Override
 app.use(methodOverride("_method"));
@@ -42,7 +39,11 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 // default route 
 app.get("/", (req, res) => {
-	res.render("homepage", {greeting: "Hello",});
+	res.render("homepage", {greeting: "bla!",});
+});
+
+app.get("/generate", (req, res) => {
+	generateHTMLTagBarcode.generate("hallo", res);
 });
 
 app.listen(PORT, () => logger.log("info", "Webservice startet on Port: %d", PORT));
@@ -58,6 +59,7 @@ logger.log("info", "ENV ist: %s", ENV);
 if (ENV==="dev"){
 	const bs = browserSync.create();
 	bs.init({
+		open: false,
 		port: PORT+1,
 		proxy: {
 			target: "localhost:" + PORT,
