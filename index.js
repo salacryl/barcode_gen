@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 	res.render("homepage", {greeting: "bla!",});
 });
 
-app.get("/generate", (req, res) => {
+app.get("/a3422/generate", (req, res) => {
 	generateHTMLTagBarcode.generate("hallo", res);
 });
 
